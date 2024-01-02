@@ -1,6 +1,11 @@
 # EasyForm
 EasyForm is a tool for automatically upload rows from a sheet to any Google Form.
 
+Spreadsheet with script:
+
+https://docs.google.com/spreadsheets/d/1rrhUXSuYQ5wEnSNlawoMtjulsr6XBKVGbMmWgpU7-M0/copy
+
+
 It supports every type of Google Form question, which include:
 - Short Answer
 - Paragraph
