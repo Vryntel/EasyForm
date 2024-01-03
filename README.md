@@ -48,4 +48,11 @@ Used for display all the Form questions. The column are:
 - Custom value: specify the custom value to use
 
 
+### Toolbar
+
+
+The toolbar has the "EasyForm" item that when clicked will display these option:
+- Analyze Form: analyze the form specified in the Settings worksheet and print all the form questions in the "Form Questions" worksheet
+- Send Data: after inserted all the columns / custom values to use as input in the "Form Questions" worksheet, with this option the script will submit all data to the Form
+- Clear Form Fields: clear the previously found form question in the "Form Questions" worksheet
 
