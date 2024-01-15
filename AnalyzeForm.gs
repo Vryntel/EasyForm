@@ -153,7 +153,13 @@ function analyzeForm() {
           responsesValues.push(responses[i][0]);
         }
 
-        formFields.push([questionType, formData[n][1], formData[n][4][0][0], formData[n][4][0][2], responsesValues]);
+        // Checkbox can have response validation
+        if (questionType == "4") {
+          formFields.push([questionType, formData[n][1], formData[n][4][0][0], formData[n][4][0][2], [responsesValues, formData[n][4][0][4]]]);
+        }
+        else {
+          formFields.push([questionType, formData[n][1], formData[n][4][0][0], formData[n][4][0][2], responsesValues]);
+        }
       }
       else if (questionType == "0" || questionType == "1") {
 
@@ -161,7 +167,7 @@ function analyzeForm() {
 
         if (formData[n][4][0][4] != null) {
 
-          //var validationType = formData[n][4][0][4][0][0];
+          // var validationType = formData[n][4][0][4][0][0];
           var validationCondition = formData[n][4][0][4][0][1];
           var validationValue = "";
 
@@ -338,15 +344,54 @@ function analyzeForm() {
 }
 
 
-//generate possible combinations for checkboxes to display in the dropdown
+// Generate possible combinations for checkboxes to display in the dropdown
 function getAllSubsets(array) {
   const subsets = [[]];
 
-  for (const el of array) {
+  for (const el of array[0]) {
     const last = subsets.length - 1;
     for (let i = 0; i <= last; i++) {
       subsets.push([...subsets[i], el]);
     }
+  }
+
+
+  const operators = {
+    '>=': function (a, b) { return a >= b },
+    '<=': function (a, b) { return a <= b },
+    '=': function (a, b) { return a == b }
+  };
+  var operator;
+
+  /*
+    Checkbox response validation
+
+    201 at least
+    204 at most
+    206 exactly
+
+  */
+
+  if (array[1] != null) {
+    switch (array[1][0][1]) {
+      case 200:
+        operator = ">=";
+        break;
+      case 201:
+        operator = "<=";
+        break;
+      case 204:
+        operator = "="
+        break;
+    }
+
+    subsets = subsets.reduce((acc, item) => {
+      if (operators[operator](item.length, array[1][0][2][0])) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+
   }
 
   // Sort array by items num
@@ -357,7 +402,7 @@ function getAllSubsets(array) {
   // Convert in flat array
   const flatArray = subsets.reduce((acc, item) => {
     if (Array.isArray(item)) {
-      //acc.push(item.toString());
+      // acc.push(item.toString());
       // I add this white space to recognize every single item in the checkboxes
       // Example: user select Option 1 and Option 2 and Option 3
       // so when submitting the form I need the three item values (I don't use the comma as separator because the checkbox value could contain it)
